@@ -1,26 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { Department } from './entities/department.entity';
 
 @Injectable()
 export class DepartmentsService {
-  create(createDepartmentDto: CreateDepartmentDto) {
-    return 'This action adds a new department';
+  constructor(
+    @InjectRepository(Department)
+    private repository: Repository<Department>,
+  ) {}
+
+  async create(createDepartmentDto: CreateDepartmentDto) {
+    const exists = await this.repository.findOne({
+      where: { name: createDepartmentDto.name },
+    });
+    if (exists) {
+      throw new ConflictException('Department already registered');
+    }
+    await this.repository.save(createDepartmentDto);
+    return createDepartmentDto;
   }
 
-  findAll() {
-    return `This action returns all departments`;
+  async findAll() {
+    return await this.repository.find({ order: { name: 'ASC' } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} department`;
+  async findOne(id: number) {
+    const department = await this.repository.findOne({ where: { id } });
+    return department;
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return `This action updates a #${id} department`;
+  async update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
+    const department = await this.repository.findOne({ where: { id } });
+    const exists = await this.repository.findOne({
+      where: { name: updateDepartmentDto.name },
+    });
+    if (exists && exists.id !== department.id) {
+      throw new ConflictException('Department already registered');
+    }
+    this.repository.merge(department, updateDepartmentDto);
+    await this.repository.save(department);
+    return department;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} department`;
+  async remove(id: number) {
+    try {
+      await this.repository.delete(id);
+    } catch {
+      throw new BadRequestException('Object do not be deleted!');
+    }
   }
 }
