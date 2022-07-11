@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DepartmentsModule } from './departments/departments.module';
 import { Department } from './departments/entities/department.entity';
+import { EmployeesModule } from './employees/employees.module';
+import { Employee } from './employees/entities/employee.entity';
 
 @Module({
   imports: [
@@ -16,11 +18,12 @@ import { Department } from './departments/entities/department.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Department],
+      entities: [Department, Employee],
       synchronize: true,
       timezone: process.env.DB_TIMEZONE,
     }),
     DepartmentsModule,
+    EmployeesModule,
   ],
 })
 export class AppModule {}
