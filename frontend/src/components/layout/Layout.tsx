@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Container } from "./Container";
 import { Navbar } from "./Navbar";
 
 interface ContainerProps {
@@ -10,9 +9,13 @@ export const Layout = ({ children }: ContainerProps) => {
   return (
     <>
       <Navbar />
-      <Container>
-        
-      </Container>
+      <div className="container-fluid">
+        <div className="row justify-content-center">
+          <div className="col-xl-10 col-md-10 col-sm-10 col-xs-10">
+            {children}
+          </div>
+        </div>
+      </div>
     </>
   )
 }
