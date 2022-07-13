@@ -12,9 +12,14 @@ export const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbar">
           <ul className="ms-5 navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
+            <li className="nav-item ms-4">
               <Link href='/departments'>
                 <a className="nav-link">Departments</a>
+              </Link>
+            </li>
+            <li className="nav-item ms-4">
+              <Link href='/employees'>
+                <a className="nav-link">Employees</a>
               </Link>
             </li>
           </ul>

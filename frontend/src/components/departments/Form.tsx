@@ -45,6 +45,10 @@ export const DepartmentForm = () => {
         <form onSubmit={handleSubmit}>
           <label htmlFor="name" className="form-label">Name *</label>
           <InputForm type="text" id="name" value={department.name} onChange={handleInputChange} />
+          {
+            department.id ?
+            <InputForm value={department.createdAt} readOnly /> : null
+          }
           <button type="submit" className="col-12 btn btn-primary mb-3">Submit</button>
           <Link href={'/departments'}>
             <button className="col-12 btn btn-info mb-3">To Departments</button>
