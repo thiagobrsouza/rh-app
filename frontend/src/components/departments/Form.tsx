@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/router";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { Department } from "../../api/departments/Department";
 import { useDepartmentService } from "../../api/departments/DepartmentService";
@@ -9,10 +10,20 @@ import { Layout } from "../layout/Layout";
 
 export const DepartmentForm = () => {
 
+  const router = useRouter();
+  const { id: queryId } = router.query;
   const service = useDepartmentService();
   const [department, setDepartment] = useState<Department>({
-    id: null, name: ''
+    name: ''
   });
+
+  useEffect(() => {
+    if (queryId) {
+      service.getOne(queryId).then((data) => {
+        setDepartment({ ...data });
+      })
+    }
+  }, [queryId]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -21,7 +32,11 @@ export const DepartmentForm = () => {
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    service.create(department);
+    if (department.id) {
+      service.update(department);
+    } else {
+      service.create(department);
+    }
   }
 
   return (

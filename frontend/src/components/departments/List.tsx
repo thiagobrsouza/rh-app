@@ -5,8 +5,9 @@ import { Column } from 'primereact/column';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { DataTable } from 'primereact/datatable';
 import { useEffect, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { Department } from '../../api/departments/Department';
+import { useDepartmentService } from '../../api/departments/DepartmentService';
 import http from '../../api/http';
 import { Card } from "../layout/Card";
 import { Layout } from "../layout/Layout";
@@ -14,6 +15,7 @@ import { Layout } from "../layout/Layout";
 
 export const DepartmentList = () => {
 
+  const service = useDepartmentService();
   const [departments, setDepartments] = useState<Department[]>([]);
 
   useEffect(() => {
@@ -29,14 +31,14 @@ export const DepartmentList = () => {
 
   const deleteOne = (department: Department) => {
     confirmDialog({
-      message: 'Tem certeza que deseja remover o item selecionado?',
-      header: 'Confirme a ação',
+      message: 'Are you sure to delete this object?',
+      header: 'Confirm action',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim',
-      rejectLabel: 'Não',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
       accept: () => {
         service.deleteOne(department.id).then((response) => {
-          toast.success('Cliente removido com sucesso!');
+          toast.success('Department deleted!');
           const changeTable = departments.filter(c => c.id !== department.id);
           setDepartments(changeTable);
         }).catch((error: any) => {
@@ -44,7 +46,7 @@ export const DepartmentList = () => {
         });
       },
       reject: () => {
-        toast.warning('Ação cancelada!')
+        toast.warning('Action canceled!')
       }
     });
   }
