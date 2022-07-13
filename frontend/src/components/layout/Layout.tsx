@@ -11,9 +11,7 @@ export const Layout = ({ children }: ContainerProps) => {
       <Navbar />
       <div className="container-fluid">
         <div className="row justify-content-center">
-          <div className="col-xl-10 col-md-10 col-sm-10 col-xs-10">
-            {children}
-          </div>
+          {children}
         </div>
       </div>
     </>
