@@ -6,7 +6,7 @@ export interface Employee {
   birthDate?: string;
   cpf?: string;
   rg?: string;
-  salary?: string;
+  salary?: any;
   department?: Department;
   createdAt?: string;
 }

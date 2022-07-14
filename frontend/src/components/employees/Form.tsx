@@ -6,6 +6,7 @@ import { Department } from "../../api/departments/Department";
 import { Employee } from "../../api/employees/Employee";
 import { useEmployeeService } from "../../api/employees/EmployeeService";
 import http from "../../api/http";
+import { converterToDecimal, currencyMask } from "../../utils/formatPrice";
 import { InputForm } from "../common/InputForm";
 import { SelectForm } from "../common/SelectForm";
 import { Card } from "../layout/Card";
@@ -16,7 +17,9 @@ export const EmployeeForm = () => {
   const router = useRouter();
   const { id: queryId } = router.query;
   const service = useEmployeeService();
-  const [employee, setEmployee] = useState<Employee>({});
+  const [employee, setEmployee] = useState<Employee>({
+    name: '', cpf: '', rg: '', birthDate: '', department: {}, salary: ''
+  });
   const [departments, setDepartments] = useState<Department[]>([]);
 
   useEffect(() => {
@@ -41,9 +44,9 @@ export const EmployeeForm = () => {
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (employee.id) {
-      service.update(employee);
+      service.update({...employee, salary: converterToDecimal(employee.salary)});
     } else {
-      service.create(employee);
+      service.create({...employee, salary: converterToDecimal(employee.salary)});
     }
   }
 
@@ -60,7 +63,7 @@ export const EmployeeForm = () => {
           <label htmlFor="birthDate" className="form-label">Birth Date *</label>
           <InputForm type="date" id="birthDate" value={employee.birthDate} onChange={handleInputChange} />
           <label htmlFor="salary" className="form-label">Salary *</label>
-          <InputForm type="number" id="salary" value={employee.salary} onChange={handleInputChange} />
+          <InputForm type="text" id="salary" value={currencyMask(employee.salary)} onChange={handleInputChange} />
           <label htmlFor="department" className="form-label">Department *</label>
           <SelectForm id="department" value={employee.department?.id} onChange={handleInputChange}>
             <option>Select and department</option>

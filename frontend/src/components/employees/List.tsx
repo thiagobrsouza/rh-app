@@ -65,11 +65,11 @@ export const EmployeeList = () => {
         <Link href={'/employees/add'}>
           <button className="btn btn-primary mb-3">New Employee</button>
         </Link>
-        <DataTable value={employees} rowHover>
-          <Column header="Code" field='id' />
-          <Column header="Name" field='name' />
+        <DataTable value={employees} rowHover paginator rows={5} rowsPerPageOptions={[5, 10, 15]}>
+          <Column header="Code" field='id' sortable />
+          <Column header="Name" field='name' sortable />
           <Column header="CPF" field='cpf' />
-          <Column header="Department" field='department.name' />
+          <Column header="Department" field='department.name' sortable />
           <Column header="Actions" body={actions} />
         </DataTable>
         <ConfirmDialog />
